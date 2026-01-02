@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: restaurant
+  template:
+    metadata:
+      labels:
+        app: restaurant
+    spec:
+      containers:
+      - name: restaurant
+        image: k3d-zomato-registry:5000/restaurant-service:v1
+        ports:
+        - containerPort: 3002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-service
+spec:
+  selector:
+    app: restaurant
+  ports:
+  - port: 3002
+    targetPort: 3002
+
