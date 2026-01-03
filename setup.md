@@ -105,18 +105,7 @@ kubectl get nodes
 ```
 **Expected**: 1 server + 2 agents → Ready
 
-## 🌐 STEP 6: Install Ingress Controller (REQUIRED)
-
-```bash
-kubectl apply -f \
-https://raw.githubusercontent.com/k3d-io/k3d/main/docs/usage/guides/traefik.yaml
-```
-
-### Verify Ingress
-```bash
-kubectl get pods -n kube-system | grep traefik
-```
-**Expected**: Running
+## 🌐 STEP 6: Verify System Pods
 
 ### Check All System Pods
 ```bash
@@ -494,6 +483,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: zomato-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
 spec:
   rules:
   - host: localhost
@@ -584,4 +575,4 @@ k3d registry list
 
 ---
 
-**Workshop Setup Complete!** 🎉
+**Workshop practical Complete!** 🎉

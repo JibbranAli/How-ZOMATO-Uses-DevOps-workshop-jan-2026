@@ -20,6 +20,47 @@ This workshop demonstrates a complete microservices architecture using:
 - **Traefik Ingress** for routing
 - **Local Docker Registry** for image management
 
+### System Architecture
+
+```mermaid
+graph TB
+    Client[Browser/Client] --> Ingress[Traefik Ingress<br/>localhost:8080]
+    
+    Ingress --> |/users| UserSvc[User Service<br/>Node.js:3001]
+    Ingress --> |/restaurants| RestSvc[Restaurant Service<br/>Python:3002]
+    Ingress --> |/orders| OrderSvc[Order Service<br/>Go:3003]
+    
+    UserSvc --> UserPods[User Pods<br/>Replicas: 2]
+    RestSvc --> RestPods[Restaurant Pods<br/>Replicas: 2]
+    OrderSvc --> OrderPods[Order Pods<br/>Replicas: 2]
+    
+    Registry[Local Registry<br/>k3d-zomato-registry:5000] --> UserPods
+    Registry --> RestPods
+    Registry --> OrderPods
+```
+
+### Kubernetes Cluster Layout
+
+```mermaid
+graph LR
+    subgraph "k3d Cluster"
+        Master[Control Plane<br/>k3d-zomato-cluster-server-0]
+        Agent1[Worker Node<br/>k3d-zomato-cluster-agent-0]
+        Agent2[Worker Node<br/>k3d-zomato-cluster-agent-1]
+        
+        Master --> Agent1
+        Master --> Agent2
+    end
+    
+    subgraph "External"
+        Registry[Registry<br/>localhost:5000]
+        LoadBalancer[Load Balancer<br/>localhost:8080]
+    end
+    
+    Registry --> Master
+    LoadBalancer --> Master
+```
+
 ## 📁 Project Structure
 
 ```
